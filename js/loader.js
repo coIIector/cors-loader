@@ -1,14 +1,14 @@
 if (window == parent) {
-    console.log('This should be run inside iframe.')
+    console.error('This should be run inside iframe.')
 } else {
     window.addEventListener("message", function (event) {
-        var url = event.data;
-        toDataUrl(url, function (data) {
-            parent.postMessage({image: {url: url, base64: data}}, '*');
+        var data = event.data;
+        process(data, function (result) {
+            parent.postMessage({corsData: {src: data.src, content: result, type: data.type}}, '*');
         });
     }, false);
 
-    function toDataUrl(url, callback) {
+    function process(data, callback) {
         var xhr = new XMLHttpRequest();
         xhr.responseType = 'blob';
         xhr.onload = function () {
@@ -16,12 +16,16 @@ if (window == parent) {
             reader.onloadend = function () {
                 callback(reader.result);
             };
-            reader.readAsDataURL(xhr.response);
+            if (data.type == 'DataURL') {
+                reader.readAsDataURL(xhr.response);
+            } else {
+                reader.readAsText(xhr.response);
+            }
         };
-        xhr.open('GET', url);
+        xhr.open('GET', data.src);
         xhr.send();
     }
 
-    parent.postMessage({initialized: true}, '*');
+    parent.postMessage({corsInitialized: true}, '*');
     console.log('loader active.');
 }

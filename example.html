@@ -1,7 +1,13 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 <script src="https://coiiector.github.io/cors-loader/js/client.js"></script>
 <script type="text/javascript">
-    loadImage('https://coiiector.github.io/cors-loader/img/js.png').then(function (base64) {
-        document.body.innerHTML = '<img src="' + base64 + '"/>';
-    });
+    (function ($) {
+        CorsLoader.add("https://coiiector.github.io/cors-loader/iframe.html");
+        CorsLoader.loadImage('https://coiiector.github.io/cors-loader/img/js.png').then(function (base64) {
+            document.body.innerHTML = $('<img/>').attr('src', base64)[0].outerHTML;
+        });
+        CorsLoader.loadText('https://coiiector.github.io/cors-loader/js/client.js').then(function (text) {
+            console.log(text);
+        });
+    })(jQuery);
 </script>
