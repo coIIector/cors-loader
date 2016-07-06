@@ -23,6 +23,8 @@ if (window == parent) {
             }
         };
         xhr.open('GET', data.src);
+        // xhr.setRequestHeader("Accept", "*/*");
+        // xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
         xhr.send();
     }
 
